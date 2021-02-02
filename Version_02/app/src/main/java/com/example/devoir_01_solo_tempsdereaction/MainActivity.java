@@ -18,72 +18,83 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+    // Class de jeu où se passera la logique
     private ReactionGame reactionGame;
-
+    // Les éléments de l'interface
     private Button button;
     private TextView txtViewTimer;
     private TextView txtViewTryCounter;
-
+    // Timer utiliser pour "schedule" les mises à jours du décompte de temps
     private Timer updateTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        // À la création, on initisalise les variables des éléments d'interfaces pour qu'ils fassent référence à ceux-ci
         this.txtViewTryCounter = findViewById(R.id.tryCounterTextView);
         this.txtViewTimer = findViewById(R.id.tryTimerTextView);
         this.button = findViewById(R.id.button);
-
+        // On ajoute un évènement On Click au boutton
         this.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 reactionGame.ButtonPressed();
             }
         });
-
+        // On initialise l'interface à celui initial du jeu
         this.initialiseBaseUI();
     }
 
+    /**
+     * Affichage de l'interface de base du jeu
+     */
     private void initialiseBaseUI() {
-
-        MainActivity ui = this;
-        reactionGame = new ReactionGame(ui);
-        /*txtViewTryCounter.setText(String.format(getResources().getString(R.string.try_counter_name), reactionGame.GetTryCounter() + 1, reactionGame.GetMaximumTries()));
-        txtViewTimer.setText(String.format(getResources().getString(R.string.ms_counter_name), 0));*/
+        reactionGame = new ReactionGame(this);
         txtViewTryCounter.setText("");
         txtViewTimer.setText("");
         button.setText(getResources().getString(R.string.start_button_instruction_name));
         button.setBackgroundColor(getResources().getColor(R.color.grey));
     }
 
+    /**
+     * Affichage de l'interface d'attente du jeu
+     */
     private void initialiseWaitUI() {
-        android.util.Log.d("WaitBefore", "WaitBefore");
         txtViewTryCounter.setText(String.format(getResources().getString(R.string.try_counter_name), reactionGame.GetTryCounter() + 1, reactionGame.GetMaximumTries()));
         txtViewTimer.setText(String.format(getResources().getString(R.string.ms_counter_name), 0));
         button.setText(getResources().getString(R.string.wait_button_instruction_name));
         button.setBackgroundColor(getResources().getColor(R.color.grey));
-        android.util.Log.d("WaitAfter", "WaitAfter");
     }
 
+    /**
+     * Affichage de l'interface où on indique à l'utilisateur d'appuyer
+     */
     private void initialisePressUI() {
         button.setText(getResources().getString(R.string.press_button_instruction_name));
         button.setBackgroundColor(getResources().getColor(R.color.bumblebee));
-        android.util.Log.d("Press", "Press");
     }
 
+    /**
+     * Affichage de l'interface signifiant à l'utilisateur qu'il a appuyé trop vite
+     */
     private void initialiseTooSoonUI() {
         button.setText(getResources().getString(R.string.too_soon_button_instruction_name));
         button.setBackgroundColor(getResources().getColor(R.color.red));
-        android.util.Log.d("Bad", "Bad");
     }
 
+    /**
+     * Affichage de l'interface signifiant que l'utilisateur a appuyé au bon moment
+     */
     private void initialiseWellDoneUI() {
         button.setText(getResources().getString(R.string.well_done_button_instruction_name));
         button.setBackgroundColor(getResources().getColor(R.color.green));
-        android.util.Log.d("Well Done", "Well Done");
     }
 
+    /**
+     * Fonction appelée par le listener GameListener lors d'un changement de l'état du jeu
+     * @param state L'état du jeu lors de l'appel de l'évènement
+     */
     public void UpdateUI(GameState state) {
         runOnUiThread(new Runnable() {
             @Override
@@ -112,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Affichage du score moyen de l'utilisateur à l'aide de ScoreDialog, une interface qui hérite de la classe Dialog
+     */
     private void showScore() {
         runOnUiThread(new Runnable() {
             @Override
@@ -122,6 +136,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Démarrage d'un timer qui met à jour la boite textuelle timer à chaque 53 millisecondes avec la différence du temps actuel et un snapshot du temps où l'état à changé à appuyer
+     */
     public void StartTimer() {
         TimerTask task = new TimerTask() {
             @Override
@@ -139,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
         this.updateTimer.schedule(task, 0, 53);
     }
 
+    /**
+     * Arrêt du timer et mise à jour de la boite de texte du timer avec la différence entre le temps où l'utilisateur à appuyer sur le bouton et un snapshot du temps de début de l'essai
+     */
     public void StopTimer() {
         updateTimer.cancel();
         runOnUiThread(new Runnable() {
