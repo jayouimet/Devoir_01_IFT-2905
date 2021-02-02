@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <TextView
+        android:id="@+id/essai"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="50" android:text="allo"
+            android:paddingTop="10dp"
+            android:textAlignment="center"
+            android:gravity="center_horizontal" />
+        <Chronometer
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:layout_weight="50"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:id="@+id/chrono"
+            />
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="4dp"
+            android:layout_weight="6"
+            android:id="@+id/button1"/>
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
