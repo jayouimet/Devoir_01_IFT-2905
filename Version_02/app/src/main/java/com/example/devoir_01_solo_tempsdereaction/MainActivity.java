@@ -48,81 +48,68 @@ public class MainActivity extends AppCompatActivity {
     private void initialiseBaseUI() {
 
         MainActivity ui = this;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                reactionGame = new ReactionGame(ui);
-                txtViewTryCounter.setText(String.format(getResources().getString(R.string.try_counter_name), reactionGame.GetTryCounter() + 1, reactionGame.GetMaximumTries()));
-                txtViewTimer.setText(String.format(getResources().getString(R.string.ms_counter_name), 0));
-                button.setText(getResources().getString(R.string.start_button_instruction_name));
-                button.setBackgroundColor(getResources().getColor(R.color.grey));
-            }
-        });
+        reactionGame = new ReactionGame(ui);
+        /*txtViewTryCounter.setText(String.format(getResources().getString(R.string.try_counter_name), reactionGame.GetTryCounter() + 1, reactionGame.GetMaximumTries()));
+        txtViewTimer.setText(String.format(getResources().getString(R.string.ms_counter_name), 0));*/
+        txtViewTryCounter.setText("");
+        txtViewTimer.setText("");
+        button.setText(getResources().getString(R.string.start_button_instruction_name));
+        button.setBackgroundColor(getResources().getColor(R.color.grey));
     }
 
     private void initialiseWaitUI() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                txtViewTryCounter.setText(String.format(getResources().getString(R.string.try_counter_name), reactionGame.GetTryCounter() + 1, reactionGame.GetMaximumTries()));
-                txtViewTimer.setText(String.format(getResources().getString(R.string.ms_counter_name), 0));
-                button.setText(getResources().getString(R.string.wait_button_instruction_name));
-                button.setBackgroundColor(getResources().getColor(R.color.grey));
-            }
-        });
+        android.util.Log.d("WaitBefore", "WaitBefore");
+        txtViewTryCounter.setText(String.format(getResources().getString(R.string.try_counter_name), reactionGame.GetTryCounter() + 1, reactionGame.GetMaximumTries()));
+        txtViewTimer.setText(String.format(getResources().getString(R.string.ms_counter_name), 0));
+        button.setText(getResources().getString(R.string.wait_button_instruction_name));
+        button.setBackgroundColor(getResources().getColor(R.color.grey));
+        android.util.Log.d("WaitAfter", "WaitAfter");
     }
 
     private void initialisePressUI() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                button.setText(getResources().getString(R.string.press_button_instruction_name));
-                button.setBackgroundColor(getResources().getColor(R.color.bumblebee));
-            }
-        });
+        button.setText(getResources().getString(R.string.press_button_instruction_name));
+        button.setBackgroundColor(getResources().getColor(R.color.bumblebee));
+        android.util.Log.d("Press", "Press");
     }
 
     private void initialiseTooSoonUI() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                button.setText(getResources().getString(R.string.too_soon_button_instruction_name));
-                button.setBackgroundColor(getResources().getColor(R.color.red));
-            }
-        });
+        button.setText(getResources().getString(R.string.too_soon_button_instruction_name));
+        button.setBackgroundColor(getResources().getColor(R.color.red));
+        android.util.Log.d("Bad", "Bad");
     }
 
     private void initialiseWellDoneUI() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                button.setText(getResources().getString(R.string.well_done_button_instruction_name));
-                button.setBackgroundColor(getResources().getColor(R.color.green));
-            }
-        });
+        button.setText(getResources().getString(R.string.well_done_button_instruction_name));
+        button.setBackgroundColor(getResources().getColor(R.color.green));
+        android.util.Log.d("Well Done", "Well Done");
     }
 
     public void UpdateUI(GameState state) {
-        switch (state) {
-            case GoodAnswer:
-                this.initialiseWellDoneUI();
-                break;
-            case Press:
-                this.initialisePressUI();
-                break;
-            case Holding:
-                this.initialiseWaitUI();
-                break;
-            case BadAnswer:
-                this.initialiseTooSoonUI();
-                break;
-            case Ended:
-                this.showScore();
-            case NotStarted:
-            default:
-                this.initialiseBaseUI();
-                break;
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switch (state) {
+                    case GoodAnswer:
+                        initialiseWellDoneUI();
+                        break;
+                    case Press:
+                        initialisePressUI();
+                        break;
+                    case Holding:
+                        initialiseWaitUI();
+                        break;
+                    case BadAnswer:
+                        initialiseTooSoonUI();
+                        break;
+                    case Ended:
+                        showScore();
+                    case NotStarted:
+                    default:
+                        initialiseBaseUI();
+                        break;
+                }
+            }
+        });
     }
 
     private void showScore() {

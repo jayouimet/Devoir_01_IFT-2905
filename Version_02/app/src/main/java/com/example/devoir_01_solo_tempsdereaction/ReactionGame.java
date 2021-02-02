@@ -72,8 +72,8 @@ public class ReactionGame {
         this.gameListener.AddListener(UI);
 
         this.maximumTries = 5;
-        this.maximumDelay = 5000;
-        this.minimumDelay = 2000;
+        this.maximumDelay = 10000;
+        this.minimumDelay = 3000;
         this.roundDelay = 1500;
     }
 
