@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Human Computer</string>
+    <string name="nouveau">Tomber</string>
+    <string name="attente">ATTENDRE QUE LE BOUTON DEVIENNE JAUNE</string>
+    <string name="tropvite">VOUS AVEZ CLIQUE PREMATUREMENT</string>
+    <string name="debut">CLIQUEZ POUR COMMENCER</string>
+    <string name="reussi">REUSSI, BIEN JOUEE :)</string>
+    <string name="clique">CLIQUE!!!!</string>
+</resources>
