@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -50,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
      * Affichage de l'interface de base du jeu
      */
     private void initialiseBaseUI() {
+        // On initialise le jeu
         reactionGame = new ReactionGame(this);
+        // Mise à jour de l'affichage
         txtViewTryCounter.setText("");
         txtViewTimer.setText("");
         button.setText(getResources().getString(R.string.start_button_instruction_name));
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
      * Affichage de l'interface d'attente du jeu
      */
     private void initialiseWaitUI() {
+        // Mise à jour de l'affichage
         txtViewTryCounter.setText(String.format(getResources().getString(R.string.try_counter_name), reactionGame.GetTryCounter() + 1, reactionGame.GetMaximumTries()));
         txtViewTimer.setText(String.format(getResources().getString(R.string.ms_counter_name), 0));
         button.setText(getResources().getString(R.string.wait_button_instruction_name));
@@ -71,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
      * Affichage de l'interface où on indique à l'utilisateur d'appuyer
      */
     private void initialisePressUI() {
+        // Mise à jour de l'affichage
         button.setText(getResources().getString(R.string.press_button_instruction_name));
         button.setBackgroundColor(getResources().getColor(R.color.bumblebee));
     }
@@ -79,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
      * Affichage de l'interface signifiant à l'utilisateur qu'il a appuyé trop vite
      */
     private void initialiseTooSoonUI() {
+        // Mise à jour de l'affichage
         button.setText(getResources().getString(R.string.too_soon_button_instruction_name));
         button.setBackgroundColor(getResources().getColor(R.color.red));
     }
@@ -87,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
      * Affichage de l'interface signifiant que l'utilisateur a appuyé au bon moment
      */
     private void initialiseWellDoneUI() {
+        // Mise à jour de l'affichage
         button.setText(getResources().getString(R.string.well_done_button_instruction_name));
         button.setBackgroundColor(getResources().getColor(R.color.green));
     }
@@ -96,9 +103,11 @@ public class MainActivity extends AppCompatActivity {
      * @param state L'état du jeu lors de l'appel de l'évènement
      */
     public void UpdateUI(GameState state) {
+        // Dépendemment de l'état du jeu, on a une fonction à exécuter sur le thread du UI, car on interagit avec l'interface. Sans cet appel il y a possibilité de crash.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                // Switch sur l'état du jeu, on met à jour l'interface avec celle correspondant à l'état du jeu
                 switch (state) {
                     case GoodAnswer:
                         initialiseWellDoneUI();
@@ -127,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
      * Affichage du score moyen de l'utilisateur à l'aide de ScoreDialog, une interface qui hérite de la classe Dialog
      */
     private void showScore() {
+        // Affichage de notre dialog custom avec le message de score.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -140,18 +150,20 @@ public class MainActivity extends AppCompatActivity {
      * Démarrage d'un timer qui met à jour la boite textuelle timer à chaque 53 millisecondes avec la différence du temps actuel et un snapshot du temps où l'état à changé à appuyer
      */
     public void StartTimer() {
+        // Tache à exécuter grâce au timer
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        // On met à jour le texte du timer avec la différence du temps actuel et le snapshot de début de tour
                         txtViewTimer.setText(String.format(getResources().getString(R.string.ms_counter_name), System.currentTimeMillis() - reactionGame.GetCounterStart()));
                     }
                 });
             }
         };
-
+        // On schedule la tâche ci-haut à chaque 53 millisecondes, un nombre premier représentent un délai en milliseconde qui simule un timer mis à jour rapidement.
         this.updateTimer = new Timer();
         this.updateTimer.schedule(task, 0, 53);
     }
@@ -160,10 +172,13 @@ public class MainActivity extends AppCompatActivity {
      * Arrêt du timer et mise à jour de la boite de texte du timer avec la différence entre le temps où l'utilisateur à appuyer sur le bouton et un snapshot du temps de début de l'essai
      */
     public void StopTimer() {
+        // On arrête le timer de mise à jour du chronomètre
         updateTimer.cancel();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                // On met à jour le champs du timer une dernière fois avec la différence entre le snapshot de début et le snapshot de fin de tour,
+                // car il pourrait arriver qu'il y ait un délai entre la dernière mise à jour du timer et l'entrée du user
                 txtViewTimer.setText(String.format(getResources().getString(R.string.ms_counter_name), reactionGame.GetLastTime()));
             }
         });
