@@ -1,10 +1,5 @@
 package com.example.devoir_01_solo_tempsdereaction;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.widget.Button;
-import android.widget.TextView;
-
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
