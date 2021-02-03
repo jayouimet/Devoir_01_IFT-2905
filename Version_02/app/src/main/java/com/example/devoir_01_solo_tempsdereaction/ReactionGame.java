@@ -214,7 +214,8 @@ public class ReactionGame {
     private void endTry() {
         // On arrête les timers
         this.mainActivity.StopTimer();
-        this.gameTimer.cancel();
+        if (this.gameTimer != null)
+            this.gameTimer.cancel();
 
         // On se part une nouvelle tache pour le timer
         TimerTask task = new TimerTask() {

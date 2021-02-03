@@ -2,11 +2,14 @@ package com.example.devoir_01_solo_tempsdereaction;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupWindow;
@@ -36,13 +39,26 @@ public class MainActivity extends AppCompatActivity {
         this.txtViewTryCounter = findViewById(R.id.tryCounterTextView);
         this.txtViewTimer = findViewById(R.id.tryTimerTextView);
         this.button = findViewById(R.id.button);
-        // On ajoute un évènement On Click au boutton
-        this.button.setOnClickListener(new View.OnClickListener() {
+        // On ajoute un évènement On Touch au boutton, je préfère utiliser le on touch dans ce cas, car le on click se produit au relâchement du bouton et dans un jeu de réaction, cela peu poser un problème
+        // @SuppressLint("ClickableViewAccessibility") -> https://stackoverflow.com/questions/47107105/android-button-has-setontouchlistener-called-on-it-but-does-not-override-perform pour une explication.
+        // Le compilateur nous génère @SuppressLint("ClickableViewAccessibility") lorsqu'on demande d'enlever le warning, mais c'est bien de savoir pourquoi il est là.
+        // Dans le cas de notre jeu de réaction, je ne crois pas qu'il soit nécessaire de donner un support au personne aveugle, car le signal pour appuyer est aussi visuel.
+        this.button.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
-            public void onClick(View v) {
-                reactionGame.ButtonPressed();
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        reactionGame.ButtonPressed();
+                        break;
+                    default:
+                        break;
+                }
+
+                return false;
             }
         });
+
         // On initialise l'interface à celui initial du jeu
         this.initialiseBaseUI();
     }
@@ -173,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void StopTimer() {
         // On arrête le timer de mise à jour du chronomètre
-        updateTimer.cancel();
+        if (this.updateTimer != null)
+            this.updateTimer.cancel();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
